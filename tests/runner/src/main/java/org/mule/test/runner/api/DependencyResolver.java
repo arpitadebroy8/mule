@@ -7,7 +7,6 @@
 
 package org.mule.test.runner.api;
 
-import static com.google.common.base.Joiner.on;
 import static java.util.stream.Collectors.toList;
 import static org.eclipse.aether.util.artifact.ArtifactIdUtils.toId;
 import static org.eclipse.aether.util.artifact.JavaScopes.RUNTIME;
@@ -28,6 +27,7 @@ import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.graph.DependencyVisitor;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactDescriptorException;
 import org.eclipse.aether.resolution.ArtifactDescriptorRequest;
@@ -43,6 +43,7 @@ import org.eclipse.aether.util.filter.PatternInclusionsDependencyFilter;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
 import org.eclipse.aether.util.graph.visitor.PathRecordingDependencyVisitor;
 import org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator;
+import org.eclipse.aether.util.graph.visitor.TreeDependencyVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -179,14 +180,27 @@ public class DependencyResolver {
 
   private void logDependencyGraph(DependencyNode node, Object request) {
     if (logger.isTraceEnabled()) {
-      PathRecordingDependencyVisitor visitor = new PathRecordingDependencyVisitor(null, false);
-      node.accept(visitor);
+      TreeDependencyVisitor treeDependencyVisitor = new TreeDependencyVisitor(new DependencyVisitor() {
 
+        private static final String TAB = "  ";
+        private String indent = "";
+
+        @Override
+        public boolean visitEnter(DependencyNode dependencyNode) {
+          indent += TAB;
+          logger.info(indent + dependencyNode.getDependency());
+          return true;
+        }
+
+        @Override
+        public boolean visitLeave(DependencyNode dependencyNode) {
+          indent = indent.substring(0, indent.length() - TAB.length());
+          return true;
+        }
+      });
       logger.trace("******* Dependency Graph calculated for {} with request: '{}' *******", request.getClass().getSimpleName(),
                    request);
-      visitor.getPaths().stream().forEach(
-                                          pathList -> logger.trace(on(" -> ")
-                                              .join(pathList.stream().filter(path -> path != null).collect(toList()))));
+      node.accept(treeDependencyVisitor);
       logger.trace("******* End of dependency Graph *******");
     }
   }

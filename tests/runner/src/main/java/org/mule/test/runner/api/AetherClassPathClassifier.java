@@ -57,6 +57,7 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
+import org.eclipse.aether.graph.Exclusion;
 import org.eclipse.aether.resolution.ArtifactDescriptorException;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
 import org.slf4j.Logger;
@@ -804,11 +805,11 @@ public class AetherClassPathClassifier implements ClassPathClassifier {
       logger.debug("Resolving dependency graph for '{}' scope direct dependencies: {} and managed dependencies {}",
                    TEST, directDependencies, managedDependencies);
 
-      final Dependency rootTestDependency = new Dependency(new DefaultArtifact(rootArtifact.getGroupId(),
-                                                                               rootArtifact.getArtifactId(), TESTS_CLASSIFIER,
-                                                                               JAR_EXTENSION,
-                                                                               rootArtifact.getVersion()),
-                                                           TEST);
+      Dependency rootTestDependency = new Dependency(new DefaultArtifact(rootArtifact.getGroupId(),
+                                                                         rootArtifact.getArtifactId(), TESTS_CLASSIFIER,
+                                                                         JAR_EXTENSION,
+                                                                         rootArtifact.getVersion()),
+                                                     TEST);
 
       DependencyFilter filter = null;
       if (!context.getTestInclusions().isEmpty()) {
@@ -820,6 +821,11 @@ public class AetherClassPathClassifier implements ClassPathClassifier {
             new PatternExclusionsDependencyFilter(exclusionsPatterns);
         filter = filter == null ? exclusionsDependencyFilter : andFilter(filter, exclusionsDependencyFilter);
       }
+
+      rootTestDependency = rootTestDependency.setExclusions(exclusionsPatterns.stream().map(pattern -> {
+        final DefaultArtifact artifact = new DefaultArtifact(pattern);
+        return new Exclusion(artifact.getGroupId(), artifact.getArtifactId(), artifact.getClassifier(), artifact.getExtension());
+      }).collect(toList()));
 
       List<File> urls =
           dependencyResolver.resolveDependencies(rootTestDependency, directDependencies, managedDependencies, filter);
