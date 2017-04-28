@@ -266,6 +266,10 @@ public class HeisenbergOperations implements Disposable {
 
   }
 
+  public void throwError() {
+    throw new AssertionError();
+  }
+
   @Override
   public void dispose() {
     disposed = true;
