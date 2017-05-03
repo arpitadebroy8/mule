@@ -243,7 +243,8 @@ public class OperationMessageProcessorTestCase extends AbstractOperationMessageP
     when(context.getRegistry().lookupObject(OBJECT_EXPRESSION_LANGUAGE)).thenReturn(new MVELExpressionLanguage(context));
     when(context.getRegistry().lookupObject(DefaultExpressionLanguageFactoryService.class))
         .thenReturn(new WeaveDefaultExpressionLanguageFactoryService());
-    doReturn(new DefaultExpressionManager(context, new DefaultStreamingManager(muleContext))).when(context).getExpressionManager();
+    doReturn(new DefaultExpressionManager(context, new DefaultStreamingManager(muleContext))).when(context)
+        .getExpressionManager();
     FlowConstruct flowConstruct = mock(FlowConstruct.class);
     when(flowConstruct.getName()).thenReturn(flowName);
 
