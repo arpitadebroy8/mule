@@ -35,12 +35,17 @@ import org.mule.test.subtypes.extension.SubTypesMappingConnector;
 import org.mule.test.subtypes.extension.Triangle;
 import org.mule.test.vegan.extension.VeganCookBook;
 
+import org.junit.Test;
+
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
 public class SubTypesMappingParserTestCase extends AbstractConfigParserTestCase {
+
+  @Override
+  protected boolean isDisposeContextPerClass() {
+    return true;
+  }
 
   @Override
   protected String getConfigFile() {
