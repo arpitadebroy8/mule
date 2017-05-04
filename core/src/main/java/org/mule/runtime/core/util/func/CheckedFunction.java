@@ -6,7 +6,7 @@
  */
 package org.mule.runtime.core.util.func;
 
-import static org.mule.runtime.core.api.rx.Exceptions.propagateFatal;
+import static org.mule.runtime.core.api.rx.Exceptions.propagateWrappingFatal;
 
 import java.util.function.Function;
 
@@ -23,7 +23,7 @@ public interface CheckedFunction<T, R> extends Function<T, R> {
   }
 
   default R handleException(Throwable throwable) {
-    throw propagateFatal(throwable);
+    throw propagateWrappingFatal(throwable);
   }
 
   R applyChecked(T t) throws Throwable;

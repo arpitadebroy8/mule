@@ -161,8 +161,8 @@ public class Exceptions {
    * @param t throwable.
    * @return exception wrapped by Reactor, after possibly wrapping with {@link MuleFatalException}.
    */
-  public static RuntimeException propagateFatal(Throwable t) {
-    return propagate(wrapFatal(t));
+  public static RuntimeException propagateWrappingFatal(Throwable t) {
+    return propagate(wrapFatal(unwrap(t)));
   }
 
   /**

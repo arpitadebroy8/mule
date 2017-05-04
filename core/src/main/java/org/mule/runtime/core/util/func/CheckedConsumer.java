@@ -6,7 +6,7 @@
  */
 package org.mule.runtime.core.util.func;
 
-import static org.mule.runtime.core.api.rx.Exceptions.propagateFatal;
+import static org.mule.runtime.core.api.rx.Exceptions.propagateWrappingFatal;
 
 import java.util.function.Consumer;
 
@@ -18,7 +18,7 @@ public interface CheckedConsumer<T> extends Consumer<T> {
     try {
       acceptChecked(t);
     } catch (Throwable throwable) {
-      throw propagateFatal(throwable);
+      throw propagateWrappingFatal(throwable);
     }
   }
 
