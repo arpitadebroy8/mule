@@ -6,12 +6,15 @@
  */
 package org.mule.test.integration.interception;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mule.test.allure.AllureConstants.InterceptonApi.ComponentInterceptionStory.COMPONENT_INTERCEPTION_STORY;
 import static org.mule.test.allure.AllureConstants.InterceptonApi.INTERCEPTION_API;
+import static org.mule.test.allure.AllureConstants.InterceptonApi.ComponentInterceptionStory.COMPONENT_INTERCEPTION_STORY;
+
 import org.mule.runtime.api.el.MuleExpressionLanguage;
 import org.mule.runtime.api.interception.InterceptionEvent;
 import org.mule.runtime.api.interception.ProcessorInterceptor;
@@ -22,6 +25,7 @@ import org.mule.runtime.core.api.config.ConfigurationBuilder;
 import org.mule.runtime.core.api.config.ConfigurationException;
 import org.mule.service.http.api.HttpService;
 import org.mule.test.AbstractIntegrationTestCase;
+import org.mule.test.heisenberg.extension.HeisenbergExtension;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +35,7 @@ import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import ru.yandex.qatools.allure.annotations.Description;
 import ru.yandex.qatools.allure.annotations.Features;
 import ru.yandex.qatools.allure.annotations.Stories;
@@ -81,6 +86,35 @@ public class ProcessorInterceptorFactoryTestCase extends AbstractIntegrationTest
     assertThat(loggerInterceptionParameter.getParameters().isEmpty(), is(true));
     assertThat(flowRefInterceptionParameter.getParameters().get("name"), is("anotherFlow"));
     assertThat(splitterInterceptionParameter.getParameters().get("expression"), nullValue());
+  }
+
+  @Test
+  public void operationParameters() throws Exception {
+    flowRunner("killFromPayload").withPayload("T-1000").withVariable("goodbye", "Hasta la vista, baby").run();
+
+    assertThat(HasInjectedAttributesInterceptor.interceptionParameters.size(), is(1));
+    List<InterceptionParameters> interceptionParameters = HasInjectedAttributesInterceptor.interceptionParameters;
+
+    InterceptionParameters killInterceptionParameter = interceptionParameters.get(0);
+
+    assertThat(killInterceptionParameter.getParameters().keySet(), contains("victim", "goodbyeMessage"));
+    assertThat(killInterceptionParameter.getParameters().get("victim"), is("T-1000"));
+    assertThat(killInterceptionParameter.getParameters().get("goodbyeMessage"), is("Hasta la vista, baby"));
+  }
+
+  @Test
+  public void implicitOperationParameters() throws Exception {
+    flowRunner("die").run();
+
+    assertThat(HasInjectedAttributesInterceptor.interceptionParameters.size(), is(1));
+    List<InterceptionParameters> interceptionParameters = HasInjectedAttributesInterceptor.interceptionParameters;
+
+    InterceptionParameters killInterceptionParameter = interceptionParameters.get(0);
+
+    assertThat(killInterceptionParameter.getParameters().keySet(), contains("config-ref"));
+    final Object configRef = killInterceptionParameter.getParameters().get("config-ref");
+    assertThat(configRef, instanceOf(HeisenbergExtension.class));
+    assertThat(((HeisenbergExtension) configRef).getConfigName(), is("heisenberg"));
   }
 
   public static class HasInjectedAttributesInterceptorFactory implements ProcessorInterceptorFactory {
