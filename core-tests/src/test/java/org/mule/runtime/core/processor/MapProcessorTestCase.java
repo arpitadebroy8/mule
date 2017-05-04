@@ -15,7 +15,7 @@ import static org.mule.runtime.api.message.Message.of;
 import static reactor.core.Exceptions.unwrap;
 import static reactor.core.publisher.Mono.just;
 
-import org.mule.runtime.api.exception.MuleFatalJvmException;
+import org.mule.runtime.core.exception.MuleFatalException;
 import org.mule.runtime.core.api.Event;
 import org.mule.runtime.core.api.EventContext;
 import org.mule.runtime.core.api.processor.Processor;
@@ -138,7 +138,7 @@ public class MapProcessorTestCase extends AbstractMuleContextTestCase {
       Throwable problem = unwrap(e);
 
       assertThat(problem, is(instanceOf(MessagingException.class)));
-      assertThat(problem.getCause(), is(instanceOf(MuleFatalJvmException.class)));
+      assertThat(problem.getCause(), is(instanceOf(MuleFatalException.class)));
       assertThat(problem.getCause().getCause(), is(error));
     }
 
@@ -149,7 +149,7 @@ public class MapProcessorTestCase extends AbstractMuleContextTestCase {
   public void mapStreamSubscribeErrorThrown() throws Exception {
     just(event).transform(testProcessorThrowsError).onErrorResume(throwable -> {
       assertThat(throwable, is(instanceOf(MessagingException.class)));
-      assertThat(throwable.getCause(), is(instanceOf(MuleFatalJvmException.class)));
+      assertThat(throwable.getCause(), is(instanceOf(MuleFatalException.class)));
       assertThat(throwable.getCause().getCause(), is(error));
 
       // If there are no assertion errors, the actual throwable will be ignored

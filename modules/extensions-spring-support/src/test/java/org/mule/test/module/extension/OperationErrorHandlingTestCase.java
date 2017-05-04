@@ -17,7 +17,7 @@ import static org.mule.test.heisenberg.extension.HeisenbergErrors.HEALTH;
 
 import org.mule.functional.junit4.rules.ExpectedError;
 import org.mule.runtime.api.connection.ConnectionException;
-import org.mule.runtime.api.exception.MuleFatalJvmException;
+import org.mule.runtime.core.exception.MuleFatalException;
 import org.mule.test.heisenberg.extension.exception.HeisenbergException;
 
 import org.junit.Rule;
@@ -67,7 +67,7 @@ public class OperationErrorHandlingTestCase extends AbstractExtensionFunctionalT
 
     } catch (Throwable t) {
       Throwable problem = t.getCause().getCause();
-      assertThat(problem, instanceOf(MuleFatalJvmException.class));
+      assertThat(problem, instanceOf(MuleFatalException.class));
       assertThat(problem.getCause(), instanceOf(LinkageError.class));
       throw t;
     }

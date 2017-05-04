@@ -19,7 +19,6 @@ import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.TRANSF
 import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.UNKNOWN;
 
 import org.mule.runtime.api.connection.ConnectionException;
-import org.mule.runtime.api.exception.MuleFatalJvmException;
 import org.mule.runtime.api.streaming.exception.StreamingBufferSizeExceededException;
 import org.mule.runtime.core.api.expression.ExpressionRuntimeException;
 import org.mule.runtime.core.api.routing.RoutingException;
@@ -62,7 +61,7 @@ public class ErrorTypeLocatorFactory {
             .addExceptionMapping(Error.class, errorTypeRepository.getCriticalErrorType())
             .addExceptionMapping(StreamingBufferSizeExceededException.class,
                                  errorTypeRepository.lookupErrorType(STREAM_MAXIMUM_SIZE_EXCEEDED).get())
-            .addExceptionMapping(MuleFatalJvmException.class, errorTypeRepository.getErrorType(FATAL_JVM).get())
+            .addExceptionMapping(MuleFatalException.class, errorTypeRepository.getErrorType(FATAL_JVM).get())
             .build())
         .build();
   }

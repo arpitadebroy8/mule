@@ -17,7 +17,7 @@ import static reactor.core.Exceptions.propagate;
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.exception.ErrorMessageAwareException;
-import org.mule.runtime.api.exception.MuleFatalJvmException;
+import org.mule.runtime.core.exception.MuleFatalException;
 import org.mule.runtime.api.message.Error;
 import org.mule.runtime.api.message.ErrorType;
 import org.mule.runtime.api.meta.AnnotatedObject;
@@ -290,9 +290,9 @@ public class ExceptionUtils extends org.apache.commons.lang.exception.ExceptionU
 
   public static Throwable wrapReactor(Throwable t) {
     if (t instanceof LinkageError) {
-      return new MuleFatalJvmException(t);
+      return new MuleFatalException(t);
     } else if (t instanceof VirtualMachineError) {
-      return new MuleFatalJvmException(t);
+      return new MuleFatalException(t);
     } else {
       return t;
     }
