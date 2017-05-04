@@ -6,10 +6,12 @@
  */
 package org.mule.runtime.core.api.rx;
 
+import static reactor.core.Exceptions.isBubbling;
 import static reactor.core.Exceptions.propagate;
 import static reactor.core.Exceptions.unwrap;
 
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.api.exception.MuleRuntimeException;
 import org.mule.runtime.core.api.DefaultMuleException;
 import org.mule.runtime.core.exception.MessagingException;
 import org.mule.runtime.core.exception.MuleFatalException;
@@ -162,7 +164,7 @@ public class Exceptions {
    * @return exception wrapped by Reactor, after possibly wrapping with {@link MuleFatalException}.
    */
   public static RuntimeException propagateWrappingFatal(Throwable t) {
-    return propagate(wrapFatal(unwrap(t)));
+    return propagate(wrapFatal(t));
   }
 
   /**
@@ -176,6 +178,8 @@ public class Exceptions {
       return new MuleFatalException(t);
     } else if (t instanceof VirtualMachineError) {
       return new MuleFatalException(t);
+    } else if (isBubbling(t)) {
+      return new MuleRuntimeException(unwrap(t));
     } else {
       return t;
     }
