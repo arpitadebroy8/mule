@@ -267,7 +267,7 @@ public class HeisenbergOperations implements Disposable {
   }
 
   public void throwError() {
-    throw new AssertionError();
+    throw new LinkageError();
   }
 
   @Override

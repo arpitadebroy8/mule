@@ -6,7 +6,7 @@
  */
 package org.mule.runtime.module.extension.internal.runtime.operation;
 
-import static org.mule.runtime.core.util.ExceptionUtils.wrapReactor;
+import static org.mule.runtime.core.api.rx.Exceptions.wrapFatal;
 import static reactor.core.publisher.Mono.error;
 import static reactor.core.publisher.Mono.just;
 
@@ -77,7 +77,7 @@ public class PagedOperationMessageProcessor extends OperationMessageProcessor {
     } catch (Exception e) {
       return error(e);
     } catch (Throwable t) {
-      return error(wrapReactor(t));
+      return error(wrapFatal(t));
     }
   }
 

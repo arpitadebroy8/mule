@@ -6,7 +6,7 @@
  */
 package org.mule.runtime.core.util.func;
 
-import static org.mule.runtime.core.util.ExceptionUtils.propagateReactor;
+import static org.mule.runtime.core.api.rx.Exceptions.propagateFatal;
 
 import java.util.function.BiPredicate;
 
@@ -18,7 +18,7 @@ public interface CheckedBiPredicate<T, U> extends BiPredicate<T, U> {
     try {
       return testChecked(t, u);
     } catch (Throwable throwable) {
-      throw propagateReactor(throwable);
+      throw propagateFatal(throwable);
     }
   }
 

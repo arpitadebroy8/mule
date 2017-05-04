@@ -10,7 +10,7 @@ import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.disposeIfNeeded
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.startIfNeeded;
 import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.stopIfNeeded;
-import static org.mule.runtime.core.util.ExceptionUtils.wrapReactor;
+import static org.mule.runtime.core.api.rx.Exceptions.wrapFatal;
 import static org.slf4j.LoggerFactory.getLogger;
 import static reactor.core.publisher.Mono.error;
 import static reactor.core.publisher.Mono.justOrEmpty;
@@ -57,7 +57,7 @@ public final class ReflectiveMethodOperationExecutor implements OperationExecuto
     } catch (Exception e) {
       return error(e);
     } catch (Throwable t) {
-      return error(wrapReactor(t));
+      return error(wrapFatal(t));
     }
   }
 

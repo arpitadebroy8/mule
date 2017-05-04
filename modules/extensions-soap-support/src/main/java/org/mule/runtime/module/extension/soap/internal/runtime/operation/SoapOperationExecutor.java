@@ -6,7 +6,7 @@
  */
 package org.mule.runtime.module.extension.soap.internal.runtime.operation;
 
-import static org.mule.runtime.core.util.ExceptionUtils.wrapReactor;
+import static org.mule.runtime.core.api.rx.Exceptions.wrapFatal;
 import static org.mule.runtime.module.extension.soap.internal.loader.SoapInvokeOperationDeclarer.ATTACHMENTS_PARAM;
 import static org.mule.runtime.module.extension.soap.internal.loader.SoapInvokeOperationDeclarer.HEADERS_PARAM;
 import static org.mule.runtime.module.extension.soap.internal.loader.SoapInvokeOperationDeclarer.OPERATION_PARAM;
@@ -67,7 +67,7 @@ public final class SoapOperationExecutor implements OperationExecutor {
     } catch (Exception e) {
       return error(soapExceptionEnricher.enrich(e));
     } catch (Throwable t) {
-      return error(wrapReactor(t));
+      return error(wrapFatal(t));
     }
   }
 

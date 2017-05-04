@@ -6,11 +6,13 @@
  */
 package org.mule.runtime.core.api.rx;
 
+import static reactor.core.Exceptions.propagate;
 import static reactor.core.Exceptions.unwrap;
 
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.core.api.DefaultMuleException;
 import org.mule.runtime.core.exception.MessagingException;
+import org.mule.runtime.core.exception.MuleFatalException;
 import org.mule.runtime.core.util.func.CheckedBiConsumer;
 import org.mule.runtime.core.util.func.CheckedBiFunction;
 import org.mule.runtime.core.util.func.CheckedBiPredicate;
@@ -153,4 +155,29 @@ public class Exceptions {
     }
   }
 
+  /**
+   * Propagate an exception through streams even if it's considered fatal by Reactor.
+   *
+   * @param t throwable.
+   * @return exception wrapped by Reactor, after possibly wrapping with {@link MuleFatalException}.
+   */
+  public static RuntimeException propagateFatal(Throwable t) {
+    return propagate(wrapFatal(t));
+  }
+
+  /**
+   * Wrap an exception with {@link MuleFatalException} so that Reactor can handle it safely instead of always bubbling it up.
+   *
+   * @param t throwable.
+   * @return possibly wrapped exception.
+   */
+  public static Throwable wrapFatal(Throwable t) {
+    if (t instanceof LinkageError) {
+      return new MuleFatalException(t);
+    } else if (t instanceof VirtualMachineError) {
+      return new MuleFatalException(t);
+    } else {
+      return t;
+    }
+  }
 }

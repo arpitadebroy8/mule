@@ -8,11 +8,12 @@ package org.mule.runtime.module.extension.internal.runtime.operation;
 
 import static java.lang.String.format;
 import static java.util.Optional.empty;
+import static org.mule.runtime.core.api.rx.Exceptions.wrapFatal;
 import static org.mule.runtime.core.execution.TransactionalExecutionTemplate.createTransactionalExecutionTemplate;
 import static org.mule.runtime.core.util.ExceptionUtils.extractConnectionException;
-import static org.mule.runtime.core.util.ExceptionUtils.wrapReactor;
 import static reactor.core.publisher.Mono.error;
 import static reactor.core.publisher.Mono.from;
+
 import org.mule.runtime.api.connection.ConnectionException;
 import org.mule.runtime.api.connection.ConnectionProvider;
 import org.mule.runtime.api.meta.model.ComponentModel;
@@ -102,7 +103,7 @@ public final class DefaultExecutionMediator implements ExecutionMediator {
     } catch (Exception e) {
       return error(e);
     } catch (Throwable t) {
-      return error(wrapReactor(t));
+      return error(wrapFatal(t));
     }
   }
 

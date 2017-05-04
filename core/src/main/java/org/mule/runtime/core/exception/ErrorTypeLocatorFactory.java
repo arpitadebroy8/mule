@@ -8,7 +8,7 @@ package org.mule.runtime.core.exception;
 
 import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.CONNECTIVITY;
 import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.EXPRESSION;
-import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.FATAL_JVM;
+import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.FATAL;
 import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.OVERLOAD;
 import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.REDELIVERY_EXHAUSTED;
 import static org.mule.runtime.core.exception.Errors.ComponentIdentifiers.RETRY_EXHAUSTED;
@@ -61,7 +61,7 @@ public class ErrorTypeLocatorFactory {
             .addExceptionMapping(Error.class, errorTypeRepository.getCriticalErrorType())
             .addExceptionMapping(StreamingBufferSizeExceededException.class,
                                  errorTypeRepository.lookupErrorType(STREAM_MAXIMUM_SIZE_EXCEEDED).get())
-            .addExceptionMapping(MuleFatalException.class, errorTypeRepository.getErrorType(FATAL_JVM).get())
+            .addExceptionMapping(MuleFatalException.class, errorTypeRepository.getErrorType(FATAL).get())
             .build())
         .build();
   }
