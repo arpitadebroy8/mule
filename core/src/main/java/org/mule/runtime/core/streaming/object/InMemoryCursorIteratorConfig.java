@@ -21,7 +21,7 @@ public final class InMemoryCursorIteratorConfig {
 
   private final int initialBufferSize;
   private final int bufferSizeIncrement;
-  private final int maxInMemoryInstances;
+  private final int maxBufferSize;
 
   /**
    * @return A new instance configured with default settings
@@ -38,16 +38,16 @@ public final class InMemoryCursorIteratorConfig {
    * @param initialBufferSize   the buffer's initial size. Must be greater than zero
    * @param bufferSizeIncrement the size that the buffer should gain each time it is expanded. A value of zero means no expansion.
    *                            Cannot be lower than zero.
-   * @param maxInMemoryInstances     the maximum amount of space that the buffer can grow to. Use {@code null} for unbounded buffers
+   * @param maxBufferSize     the maximum amount of space that the buffer can grow to. Use {@code null} for unbounded buffers
    * @throws IllegalArgumentException if any of the given arguments is invalid
    */
-  public InMemoryCursorIteratorConfig(int initialBufferSize, int bufferSizeIncrement, int maxInMemoryInstances) {
+  public InMemoryCursorIteratorConfig(int initialBufferSize, int bufferSizeIncrement, int maxBufferSize) {
     checkArgument(initialBufferSize > 0, "initialBufferSize must be greater than zero");
     checkArgument(bufferSizeIncrement >= 0, "bufferSizeIncrement cannot be negative");
 
     this.initialBufferSize = initialBufferSize;
     this.bufferSizeIncrement = bufferSizeIncrement;
-    this.maxInMemoryInstances = maxInMemoryInstances;
+    this.maxBufferSize = maxBufferSize;
   }
 
   public int getInitialBufferSize() {
@@ -58,7 +58,7 @@ public final class InMemoryCursorIteratorConfig {
     return bufferSizeIncrement;
   }
 
-  public int getMaxInMemoryInstances() {
-    return maxInMemoryInstances;
+  public int getMaxBufferSize() {
+    return maxBufferSize;
   }
 }
