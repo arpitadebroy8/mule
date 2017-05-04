@@ -121,7 +121,7 @@ public class DefaultsConfigurationBuilder extends AbstractConfigurationBuilder {
     registerObject(OBJECT_CONVERTER_RESOLVER, new DynamicDataTypeConversionResolver(muleContext), muleContext);
 
     registerObject(OBJECT_EXPRESSION_LANGUAGE, new MVELExpressionLanguage(muleContext), muleContext);
-    StreamingManager streamingManager = new DefaultStreamingManager(muleContext);
+    StreamingManager streamingManager = new DefaultStreamingManager();
     registerObject(OBJECT_STREAMING_MANAGER, streamingManager, muleContext);
     registerObject(OBJECT_EXPRESSION_MANAGER, new DefaultExpressionManager(muleContext, streamingManager), muleContext);
     registerObject(OBJECT_CONNECTOR_MESSAGE_PROCESSOR_LOCATOR, new MuleConnectorOperationLocator(), muleContext);

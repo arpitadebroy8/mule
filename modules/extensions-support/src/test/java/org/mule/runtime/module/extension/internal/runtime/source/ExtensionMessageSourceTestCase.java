@@ -195,7 +195,7 @@ public class ExtensionMessageSourceTestCase extends AbstractMuleContextTestCase 
     when(result.getMediaType()).thenReturn(of(ANY));
     when(result.getAttributes()).thenReturn(of(mock(Attributes.class)));
 
-    muleContext.getRegistry().registerObject(OBJECT_STREAMING_MANAGER, new DefaultStreamingManager(muleContext));
+    muleContext.getRegistry().registerObject(OBJECT_STREAMING_MANAGER, new DefaultStreamingManager());
 
     when(extensionModel.getXmlDslModel()).thenReturn(XmlDslModel.builder().setPrefix("test-extension").build());
 

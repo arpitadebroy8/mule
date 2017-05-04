@@ -32,7 +32,6 @@ public class DefaultStreamingManager implements StreamingManager, Initialisable,
 
   private static final Logger LOGGER = getLogger(DefaultStreamingManager.class);
 
-  private final MuleContext muleContext;
   private ByteBufferManager bufferManager;
   private ByteStreamingManager byteStreamingManager;
   private ObjectStreamingManager objectStreamingManager;
@@ -41,9 +40,7 @@ public class DefaultStreamingManager implements StreamingManager, Initialisable,
   private boolean initialised = false;
 
   @Inject
-  public DefaultStreamingManager(MuleContext muleContext) {
-    this.muleContext = muleContext;
-  }
+  private MuleContext muleContext;
 
   /**
    * {@inheritDoc}
